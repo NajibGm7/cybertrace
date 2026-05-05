@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberTrace – Digital Forensics Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+
+  <!-- ══ AUTH OVERLAY ══════════════════════════════════════════════════════ -->
+  <div id="auth-overlay" class="auth-overlay">
+    <div class="auth-bg-grid"></div>
+
+    <!-- Animated scanner line -->
+    <div class="scan-line"></div>
+
+    <div class="auth-card" id="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">CYBER<strong>TRACE</strong></span>
+      </div>
+      <p class="auth-subtitle">Digital Forensics Toolkit v1.0</p>
+
+      <!-- ── LOGIN FORM ──────────────────────────────── -->
+      <div id="login-form">
+        <h2 class="form-title">ANALYST LOGIN</h2>
+        <div class="form-group">
+          <label>USERNAME</label>
+          <input type="text" id="login-username" placeholder="analyst_01" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label>PASSWORD</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div id="login-error" class="form-error"></div>
+        <button class="btn-primary" onclick="handleLogin()">
+          <span>AUTHENTICATE</span>
+          <span class="btn-arrow">→</span>
+        </button>
+        <p class="form-switch">No account? <a href="#" onclick="showRegister()">Register</a></p>
+      </div>
+
+      <!-- ── REGISTER FORM ───────────────────────────── -->
+      <div id="register-form" style="display:none">
+        <h2 class="form-title">CREATE ACCOUNT</h2>
+        <div class="form-group">
+          <label>USERNAME</label>
+          <input type="text" id="reg-username" placeholder="analyst_01">
+        </div>
+        <div class="form-group">
+          <label>EMAIL</label>
+          <input type="email" id="reg-email" placeholder="analyst@lab.com">
+        </div>
+        <div class="form-group">
+          <label>PASSWORD</label>
+          <input type="password" id="reg-password" placeholder="Min 8 characters">
+        </div>
+        <div id="register-error" class="form-error"></div>
+        <div id="register-success" class="form-success"></div>
+        <button class="btn-primary" onclick="handleRegister()">
+          <span>CREATE ACCOUNT</span>
+          <span class="btn-arrow">→</span>
+        </button>
+        <p class="form-switch">Have an account? <a href="#" onclick="showLogin()">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN APP ══════════════════════════════════════════════════════════ -->
+  <div id="app" style="display:none">
+
+    <!-- ── SIDEBAR ────────────────────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">CYBER<strong>TRACE</strong></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+          <span class="nav-icon">◈</span><span>Dashboard</span>
+        </a>
+        <a class="nav-item" data-page="upload" onclick="navigate('upload')">
+          <span class="nav-icon">⬆</span><span>Upload Evidence</span>
+        </a>
+        <a class="nav-item" data-page="evidence" onclick="navigate('evidence')">
+          <span class="nav-icon">◉</span><span>Evidence Files</span>
+        </a>
+        <a class="nav-item" data-page="network" onclick="navigate('network')">
+          <span class="nav-icon">⬡</span><span>Network Monitor</span>
+        </a>
+        <a class="nav-item" data-page="logs" onclick="navigate('logs')">
+          <span class="nav-icon">≡</span><span>Audit Logs</span>
+        </a>
+        <a class="nav-item" data-page="report" onclick="navigate('report')">
+          <span class="nav-icon">⬜</span><span>Reports</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-badge">
+          <span class="user-icon">◑</span>
+          <div>
+            <div id="sidebar-username" class="user-name">—</div>
+            <div id="sidebar-role" class="user-role">analyst</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="logout()">LOGOUT</button>
+      </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ────────────────────────────────────────────────── -->
+    <main class="main-content">
+      <!-- Top bar -->
+      <header class="topbar">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="page-title">Dashboard</div>
+        <div class="topbar-right">
+          <div class="status-dot pulsing"></div>
+          <span id="topbar-time" class="topbar-time"></span>
+        </div>
+      </header>
+
+      <!-- Page views -->
+      <div class="page-content">
+        <div id="page-dashboard"  class="page active"></div>
+        <div id="page-upload"     class="page"></div>
+        <div id="page-evidence"   class="page"></div>
+        <div id="page-network"    class="page"></div>
+        <div id="page-logs"       class="page"></div>
+        <div id="page-report"     class="page"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/pages.js"></script>
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>
