@@ -159,8 +159,7 @@ def create_report(current_user):
 
 
 @extra_bp.route('/report/<filename>', methods=['GET'])
-@token_required
-def download_report(current_user, filename):
+def download_report(filename):
     """Serve a previously generated report file."""
     # Sanitise – reject path traversal
     if '..' in filename or '/' in filename:
